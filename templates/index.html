@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Camel Calculator</title>
+    <!-- Using Tailwind CSS for quick, beautiful styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-amber-50 min-h-screen py-10 px-4 flex flex-col items-center justify-center font-sans"
+  >
+    <div
+      class="bg-white rounded-3xl shadow-xl max-w-2xl w-full p-6 md:p-10 border border-amber-100"
+    >
+      <div class="text-center mb-8">
+        <div class="text-5xl mb-4">🐪</div>
+        <h1 class="text-3xl font-extrabold text-amber-900 mb-2">
+          Camel Calculator
+        </h1>
+        <p class="text-gray-500">
+          Calculate worth based on the handwritten chart.
+        </p>
+      </div>
+
+      <!-- The form submits to the Flask backend via POST -->
+      <form method="POST" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          {% for category, options in categories.items() %}
+          <div class="flex flex-col">
+            <label
+              for="{{ category }}"
+              class="mb-1.5 text-sm font-semibold text-gray-700"
+              >{{ category }}</label
+            >
+            <!-- Notice the names and values hide the camel counts from the browser! -->
+            <select
+              name="{{ category }}"
+              id="{{ category }}"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full p-3 shadow-sm outline-none transition-colors"
+            >
+              {% for option_name in options.keys() %}
+              <option value="{{ option_name }}">{{ option_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endfor %}
+        </div>
+
+        <button
+          type="submit"
+          class="mt-8 w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 shadow-md transform hover:scale-[1.02] active:scale-[0.98] text-lg"
+        >
+          Calculate My Camels!
+        </button>
+      </form>
+
+      <!-- Only display the result if the backend calculation was performed -->
+      {% if result is not none %}
+      <div
+        id="result-container"
+        class="mt-8 text-center bg-gradient-to-br from-amber-100 to-orange-100 border-2 border-amber-400 p-8 rounded-2xl shadow-inner transition-all duration-300"
+      >
+        <p
+          class="text-lg text-amber-800 font-semibold mb-1 uppercase tracking-wide"
+        >
+          You are worth:
+        </p>
+        <h2 class="text-6xl font-extrabold text-amber-700 drop-shadow-sm">
+          <span>{{ result }}</span> 🐪
+        </h2>
+      </div>
+      <script>
+        // Automatically scroll to the result once the page reloads after submission
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: "smooth",
+        });
+      </script>
+      {% endif %}
+    </div>
+  </body>
+</html>
